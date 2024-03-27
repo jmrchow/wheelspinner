@@ -17,24 +17,74 @@ body.active-modal {
     right: 0;
     bottom: 0;
     position: fixed;
+    z-index: 1;
 }
+.modal h2{
+    font-size: 20px
+}
+.modal p{font-size: 16px}
 
 .overlay {
     background: rgba(49,49,49,0.8);
 }
 .modal-content {
     position: absolute;
+    display:flex;
+    flex-direction:column;
+    text-align: center;
     top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
     line-height: 1.4;
+    gap: 24px;
     background: #f1f1f1;
-    padding: 14px 28px;
-    border-radius: 3px;
+    padding: 16px 28px 48px 28px;
+    border-radius: 30px;
     max-width: 600px;
     min-width: 300px;
+    z-index: 2;
 }
 
+.close-button{
+    width: 30px;
+    height: 20px;
+    font-size: 20px;
+    align-self: flex-end;
+    border: none;
+    font-weight: bold;
+    color: grey;
+    margin-bottom: 8px;
+}
+
+.email-input{
+  width: 100%;
+  height: 50px;
+  padding: 8px;
+  border: 1px solid #F1045C;
+  border-radius: 10px;
+  text-indent: 3%;
+}
+#email::placeholder {
+  color: #999; /* Placeholder text color */
+  text-indent: 3%; /* Shift placeholder text over by 5 pixels */
+}
+
+#email:focus {
+  outline: none; /* Remove outline on focus */
+  }
+
+.confirm-button{
+    height: 50px;
+    width: 100%;
+    background: #F1045C;
+    color: white;
+    border-radius: 15px;
+    font-weight: bold;
+}
+
+.confirm-button:disabled {
+ opacity: 0.6; 
+}
 .close-modal {
     position: absolute;
     top: 10px;

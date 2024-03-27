@@ -5,40 +5,35 @@ import styles from "./page.module.css";
 import Chart from "chart.js/auto";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import Modal from './Modal.tsx';
-
+import randomColor from "randomcolor";
 import React, { useEffect, useRef } from 'react';
-
+import { createClient } from '@supabase/supabase-js'
 export default function Home() {
 
 
   const chartContainer = useRef(null); // Ref for chart canvas
   const myChart = useRef(null);
+  const supabase = useRef(null)
+  const test = "red";
+
+  useEffect(() => {
+    // Create a single supabase client for interacting with your database
+  supabase.current = createClient('https://xyzcompany.supabase.co', 'public-anon-key')
+  })
   useEffect(() => {
     // Data and configuration
-    const data = {
-      labels: ['Prize 1', 'Prize 2', 'Prize 3', 'Price 4', 'Prize 5', 'Prize 6', 'Prize 7'],
+    let colors = []
+    for (let i = 0; i < 3; i++){
+      colors.push(randomColor());
+    }
+    const data = { 
+      labels: ['Prize 1', 'Prize 2', 'Prize 3'],
       datasets: [{
         label: 'Weekly Sales',
-        data: [25, 25, 25, 25, 25, 25, 10],
-        backgroundColor: [
-          'rgba(255, 26, 104, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          'rgba(255, 159, 64, 0.2)',
-          'rgba(0, 0, 0, 0.2)'
-        ],
-        borderColor: [
-          'rgba(255, 26, 104, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(153, 102, 255, 1)',
-          'rgba(255, 159, 64, 1)',
-          'rgba(0, 0, 0, 1)'
-        ],
-        borderWidth: 10,
+        data: [25, 25, 25],
+        backgroundColor: colors, 
+        borderColor: test, 
+        borderWidth: 3,
         borderAlign: 'inner',
         borderJoinStyle: 'miter',
         rotation: 20
@@ -69,6 +64,7 @@ export default function Home() {
       data,
       plugins: [spinPointer, ChartDataLabels],
       options: {
+        events: [],
         plugins: { 
           datalabels: { // Configure datalabels plugin
             display: true,
@@ -90,7 +86,9 @@ rotation: function(ctx) {
             align: 'end',
             offset: '10'
             
-          }
+          },
+          legend:{display:false},
+
         }
       }
     };
@@ -109,25 +107,30 @@ rotation: function(ctx) {
   }
   return (
     <main className={styles.main}>
-      <Modal></Modal>
-      <div className="chartCard">
-        <div className="chartBox">
+      <Modal className={styles.modalOverlay}></Modal>   
+<div className={styles.wheelContainer}>
+      <Image
+          className={styles.wheelBorder}
+      src="/wheel-border.svg"
+      fill={true}
+      alt="Picture of the author"
+    />
+                                <Image
+          className={styles.wheelPointer}
+      src="/wheel-pointer.svg"
+      width={150}
+      height={150}
+      alt="Picture of the author"
+    />
+     <div className={styles.chartBox}>
+
           <canvas ref={chartContainer} id="myChart"></canvas>
         </div>
       </div>
 
       <button onClick={spin}>Spin</button>
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+
 
     </main>
   );
