@@ -36,7 +36,7 @@ export default function Home() {
         borderWidth: 3,
         borderAlign: 'inner',
         borderJoinStyle: 'miter',
-        rotation: 20
+        rotation: 0
 
       }]
     };
@@ -64,6 +64,38 @@ export default function Home() {
       data,
       plugins: [spinPointer, ChartDataLabels],
       options: {
+        animation: {
+            onProgress: function(animation) {
+                const chartInstance = animation.chart;
+                const ctx = chartInstance.ctx;
+                const meta = chartInstance.getDatasetMeta(0);
+                const dataset = meta.data;
+                const startAngle = meta.controller.chart.options.rotation || 0; 
+
+                dataset.forEach((element) => {
+                    const model = element;
+                    if (model) {
+                        const value = element.$datalabels[0]._model.lines[0] || '';
+                        const angle = startAngle + (model.startAngle + model.endAngle) / 2;
+
+                        const posX = model.x + (model.outerRadius -60) * Math.cos(angle);
+                        const posY = model.y + (model.outerRadius - 60) * Math.sin(angle);
+
+                        ctx.save();
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.translate(posX, posY);
+                        ctx.rotate(angle + Math.PI / 2);
+                        ctx.fillText(value, 0, 0);
+                        ctx.restore();
+                    }
+                });
+
+            
+            
+            },duration: 10000,
+        },
+    
         events: [],
         plugins: { 
           datalabels: { // Configure datalabels plugin
@@ -77,14 +109,13 @@ rotation: function(ctx) {
 
     const sliceValue = ctx.dataset.data[ctx.dataIndex]; // Value of the current slice
     const sliceAngle = (((sliceValue / sum) / 2) + (valuesBefore / sum))*360; // Angle of the current slice
-              console.log(sliceAngle);
     const rotation = startAngle + sliceAngle; // Calculate rotation angle for the label
-
+    console.log("test");
     return rotation;
 },
             anchor: 'center',
             align: 'end',
-            offset: '10'
+            offset: '4'
             
           },
           legend:{display:false},
@@ -102,7 +133,7 @@ rotation: function(ctx) {
     return () => myChart.current.destroy(); // Destroy chart on unmount
   }, []); 
   function spin(){
-    myChart.current.config.data.datasets[0].rotation = Math.random() * 3333;
+    myChart.current.config.data.datasets[0].rotation = 720;
     myChart.current.update();
   }
   return (
@@ -128,7 +159,7 @@ rotation: function(ctx) {
         </div>
       </div>
 
-      <button onClick={spin}>Spin</button>
+      <button className={styles.spinButton} onClick={spin}>Spin</button>
 
 
 

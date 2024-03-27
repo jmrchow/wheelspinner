@@ -3,12 +3,12 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding: 6rem;
+  padding: 1rem;
   min-height: 100vh;
 }
 
 
-.wheelContainer{position: relative; width: 50%; aspect-ratio: 1/1}
+.wheelContainer{position: relative; width: 80%; aspect-ratio: 1/1}
 .chartBox {position: absolute; width: 90%; height: 90%;  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -19,6 +19,7 @@
   height: 100%;  top: 50%;
   left: 50%;
   transform: rotate(2deg) translate(0, 1%);
+  display: none;
 
 }
 .wheelPointer {position: absolute; height: 30%; width: 30%;top: -5%;
@@ -27,5 +28,15 @@
 }
 
 .modalOverlay {z-index: 2; position: absolute;}
+
+
+.spinButton{    height: 50px;
+    width: 100%;
+    background: #F1045C;
+    border-color: white;
+    color: white;
+    border-radius: 15px;
+    font-weight: bold;
+}
 
 
