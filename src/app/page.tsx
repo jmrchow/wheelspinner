@@ -8,29 +8,65 @@ import Modal from './Modal.tsx';
 import randomColor from "randomcolor";
 import React, { useEffect, useRef } from 'react';
 import { createClient } from '@supabase/supabase-js'
+import { supabase } from './supabaseClient'
 export default function Home() {
 
 
   const chartContainer = useRef(null); // Ref for chart canvas
   const myChart = useRef(null);
-  const supabase = useRef(null)
+  const testdata = useRef([]);
   const test = "red";
 
   useEffect(() => {
     // Create a single supabase client for interacting with your database
-  supabase.current = createClient('https://xyzcompany.supabase.co', 'public-anon-key')
+
+
+          testdata.current = [{prizeName: "Prize 1", size: 25, probability: 25},
+      //       {prizeName: "Prize 2", size: 25, probability: 25},
+      //       {prizeName: "Prize 3", size: 25, probability: 25},
+      //       {prizeName: "Prize 4", size: 50, probability: 25},
+      //     {prizeName: "Prize 5", size: 25, probability: 25},
+      // {prizeName: "Prize 6", size: 25, probability: 25},
+    ]
+    async function getWheelData() {
+      const { wheelData, error } = await supabase
+        .from('ActiveEvent')
+        .select('data')
+      
+
+
+      testdata.current.push(wheelData);
+}
+    getWheelData()
+
+    // testdata.current = [
+    //   {prizeName: "Prize 1", size: 25, probability: 25},
+    //   //       {prizeName: "Prize 2", size: 25, probability: 25},
+    //   //       {prizeName: "Prize 3", size: 25, probability: 25},
+    //   //       {prizeName: "Prize 4", size: 50, probability: 25},
+    //   //     {prizeName: "Prize 5", size: 25, probability: 25},
+    //   // {prizeName: "Prize 6", size: 25, probability: 25},
+    // ]
+      
+
   })
   useEffect(() => {
     // Data and configuration
-    let colors = []
-    for (let i = 0; i < 3; i++){
-      colors.push(randomColor());
+
+    let fetchedData = testdata.current;
+        let colors = []
+    let labels = [];
+    let sizes = [];
+    for ( let i = 0; i < fetchedData.length; i++){
+      labels.push(fetchedData[i].prizeName)
+      sizes.push(fetchedData[i].size)
+            colors.push(randomColor());
     }
     const data = { 
-      labels: ['Prize 1', 'Prize 2', 'Prize 3'],
+      labels: labels,
       datasets: [{
         label: 'Weekly Sales',
-        data: [25, 25, 25],
+        data: sizes,
         backgroundColor: colors, 
         borderColor: test, 
         borderWidth: 3,
@@ -57,12 +93,11 @@ export default function Home() {
       }
     }
      Chart.register(spinPointer);
-    Chart.register(ChartDataLabels);
 
     const config = {
       type: 'pie',
       data,
-      plugins: [spinPointer, ChartDataLabels],
+      plugins: [spinPointer],
       options: {
         animation: {
             onProgress: function(animation) {
@@ -71,11 +106,11 @@ export default function Home() {
                 const meta = chartInstance.getDatasetMeta(0);
                 const dataset = meta.data;
                 const startAngle = meta.controller.chart.options.rotation || 0; 
-
+                const labels = chartInstance.data.labels;
                 dataset.forEach((element) => {
                     const model = element;
                     if (model) {
-                        const value = element.$datalabels[0]._model.lines[0] || '';
+                        const value = labels[model.$context.index] 
                         const angle = startAngle + (model.startAngle + model.endAngle) / 2;
 
                         const posX = model.x + (model.outerRadius -60) * Math.cos(angle);
@@ -86,6 +121,7 @@ export default function Home() {
                         ctx.textBaseline = 'middle';
                         ctx.translate(posX, posY);
                         ctx.rotate(angle + Math.PI / 2);
+                        ctx.font = "bold normal 16px Arial";
                         ctx.fillText(value, 0, 0);
                         ctx.restore();
                     }
@@ -98,26 +134,7 @@ export default function Home() {
     
         events: [],
         plugins: { 
-          datalabels: { // Configure datalabels plugin
-            display: true,
-            formatter: (value, context) => context.chart.data.labels[context.dataIndex], // Show labels from data.labels
-            color: 'black',
-rotation: function(ctx) {
-    const valuesBefore = ctx.dataset.data.slice(0, ctx.dataIndex).reduce((a, b) => a + b, 0); // Sum of values before the current slice
-    const sum = ctx.dataset.data.reduce((a, b) => a + b, 0); // Total sum of all values
-    const startAngle = ctx.dataset.rotation % 360 || 0; // Start angle of the pie chart
 
-    const sliceValue = ctx.dataset.data[ctx.dataIndex]; // Value of the current slice
-    const sliceAngle = (((sliceValue / sum) / 2) + (valuesBefore / sum))*360; // Angle of the current slice
-    const rotation = startAngle + sliceAngle; // Calculate rotation angle for the label
-    console.log("test");
-    return rotation;
-},
-            anchor: 'center',
-            align: 'end',
-            offset: '4'
-            
-          },
           legend:{display:false},
 
         }
@@ -131,9 +148,37 @@ rotation: function(ctx) {
     
     // Return cleanup function
     return () => myChart.current.destroy(); // Destroy chart on unmount
-  }, []); 
+  }, []);
+
+  function pickItemByProbability(data) {
+    // Calculate the total weight
+    let totalWeight = data.reduce((acc, item) => acc + item.probability, 0);
+
+    // Generate a random number between 0 and totalWeight
+    let randomNumber = Math.random() * totalWeight;
+
+    // Iterate through the items and find the one that matches the random number
+    let cumulativeWeight = 0;
+    for (let i = 0; i < data.length; i++) {
+        cumulativeWeight += data[i].probability;
+        if (randomNumber < cumulativeWeight) {
+            // Return the index of the chosen item
+            return i;
+        }
+    }
+
+    // If no item was chosen (which should not happen if totalWeight > 0),
+    // return the index of the last item as a fallback
+    return data.length - 1;
+}
   function spin(){
-    myChart.current.config.data.datasets[0].rotation = 720;
+              console.log(testdata.current);
+    let winnerIndex = pickItemByProbability(testdata.current);
+    console.log(winnerIndex + 1);
+    let totalSizes = testdata.current.reduce((acc, item) => acc + item.size, 0);
+    let prevSizes = testdata.current.slice(0,winnerIndex).reduce((acc,item) => acc + item.size, 0);
+    let rotation = ((prevSizes + (testdata.current[winnerIndex].size / 2)) / totalSizes) * 360
+    myChart.current.config.data.datasets[0].rotation = (360 * 20) + 360 - rotation;
     myChart.current.update();
   }
   return (
@@ -151,6 +196,20 @@ rotation: function(ctx) {
       src="/wheel-pointer.svg"
       width={150}
       height={150}
+      alt="Picture of the author"
+    />
+                                        <Image
+          className={styles.wheelCenter}
+      src="/wheel-center.svg"
+      width={500}
+      height={500}
+      alt="Picture of the author"
+    />
+                                        <Image
+          className={styles.wheelSmallCenter}
+      src="/wheel-smallcenter.svg"
+      width={500}
+      height={500}
       alt="Picture of the author"
     />
      <div className={styles.chartBox}>

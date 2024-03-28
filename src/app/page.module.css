@@ -19,12 +19,28 @@
   height: 100%;  top: 50%;
   left: 50%;
   transform: rotate(2deg) translate(0, 1%);
-  display: none;
 
 }
 .wheelPointer {position: absolute; height: 30%; width: 30%;top: -5%;
   left: 50%;
   transform: translate(-50%, 0);
+}
+
+.wheelCenter{
+position: absolute;
+    width: 15%;
+  height: 15%;    left: 50%;
+  top: 50%;
+  transform: translate(-50%, -35%);
+}
+
+.wheelSmallCenter{  position: absolute;width: 15%;
+  height: 7%; 
+  width: 7%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -18%);
+
 }
 
 .modalOverlay {z-index: 2; position: absolute;}

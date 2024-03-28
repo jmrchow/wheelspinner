@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import "./Modal.css";
 
+import { supabase } from './supabaseClient'
+
 export default function Modal() {
   const[showModal, setShowModal] = useState(true)
 
@@ -38,6 +40,18 @@ export default function Modal() {
 
   useEffect( () => {openModal()}, [])
 
+  const onConfirmHandle =  async () => {
+    
+const { data, error } = await supabase
+  .from('Emails')
+  .insert([
+    { email: email},
+  ])
+  .select()
+hideModal();
+
+  }
+
   return (
     <>
   <button
@@ -65,7 +79,7 @@ export default function Modal() {
         placeholder="email"
         required
       />
-    </div>          <button className="confirm-button" onClick={hideModal} disabled={!isValid}>Confirm</button>
+    </div>          <button className="confirm-button" onClick={onConfirmHandle} disabled={!isValid}>Confirm</button>
         </div>
       </div>)}
 </>
