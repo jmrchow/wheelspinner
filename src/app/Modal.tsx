@@ -1,23 +1,22 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from "react";
 import "./Modal.css";
 
-import { supabase } from './supabaseClient'
+import { supabase } from "./supabaseClient";
 
-export default function Modal() {
-  const[showModal, setShowModal] = useState(true)
-
-
+export default function Modal({ onEmailSubmit }) {
+  const [showModal, setShowModal] = useState(true);
 
   const openModal = (event) => {
-  document.body.classList.add('active-modal');
-  setShowModal(true); 
-}
- const hideModal = (event) => {
-  document.body.classList.remove('active-modal');
-  setShowModal(false)  }
-  const [email, setEmail] = useState('');
+    document.body.classList.add("active-modal");
+    setShowModal(true);
+  };
+  const hideModal = (event) => {
+    document.body.classList.remove("active-modal");
+    setShowModal(false);
+  };
+  const [email, setEmail] = useState("");
   const [isValid, setIsValid] = useState(false);
 
   const handleInputChange = (e) => {
@@ -38,55 +37,59 @@ export default function Modal() {
   // .insert({ email })
   // }
 
-  useEffect( () => {openModal()}, [])
+  useEffect(() => {
+    openModal();
+  }, []);
 
-  const onConfirmHandle =  async () => {
-    
-const { data, error } = await supabase
-  .from('Emails')
-  .insert([
-    { email: email},
-  ])
-  .select()
-hideModal();
-
-  }
+  const onConfirmHandle = async () => {
+    const { data, error } = await supabase
+      .from("Emails")
+      .insert([{ email: email }])
+      .select();
+    onEmailSubmit(email);
+    hideModal();
+  };
 
   return (
     <>
-  <button
-      onClick={openModal}
-      className="btn-modal">
-      Test Modal
-  
+      <button onClick={openModal} className="btn-modal">
+        Test Modal
+      </button>
 
-    </button>
-
-{showModal && (
-    <div className="modal">
-        <div className="overlay" onClick={hideModal}></div>
-        <div className="modal-content">
-          <button className="close-button" onClick={hideModal}>X</button>
-          <h2>Give us your email to spin!</h2>
-          <p> Something about giving the email and why we're taking the email.</p>
-              <div>
-      <input className="email-input"
-        type="email"
-        id="email"
-        name="email"
-        value={email}
-        onChange={handleInputChange}
-        placeholder="email"
-        required
-      />
-    </div>          <button className="confirm-button" onClick={onConfirmHandle} disabled={!isValid}>Confirm</button>
+      {showModal && (
+        <div className="modal">
+          <div className="overlay" onClick={hideModal}></div>
+          <div className="modal-content">
+            <button className="close-button" onClick={hideModal}>
+              X
+            </button>
+            <h2>Give us your email to spin!</h2>
+            <p>
+              {" "}
+              Something about giving the email and why we're taking the email.
+            </p>
+            <div>
+              <input
+                className="email-input"
+                type="email"
+                id="email"
+                name="email"
+                value={email}
+                onChange={handleInputChange}
+                placeholder="email"
+                required
+              />
+            </div>{" "}
+            <button
+              className="confirm-button"
+              onClick={onConfirmHandle}
+              disabled={!isValid}
+            >
+              Confirm
+            </button>
+          </div>
         </div>
-      </div>)}
-</>
-  )
-
-
+      )}
+    </>
+  );
 }
-
-
-
