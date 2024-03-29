@@ -65,7 +65,6 @@ export default function Modal({ onEmailSubmit }) {
             </button>
             <h2>Give us your email to spin!</h2>
             <p>
-              {" "}
               Something about giving the email and why we're taking the email.
             </p>
             <div>
