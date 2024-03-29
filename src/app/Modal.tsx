@@ -52,10 +52,6 @@ export default function Modal({ onEmailSubmit }) {
 
   return (
     <>
-      <button onClick={openModal} className="btn-modal">
-        Test Modal
-      </button>
-
       {showModal && (
         <div className="modal">
           <div className="overlay" onClick={hideModal}></div>

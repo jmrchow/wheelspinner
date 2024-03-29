@@ -100,9 +100,9 @@ export default function Home() {
                   startAngle + (model.startAngle + model.endAngle) / 2;
 
                 const posX =
-                  model.x + (model.outerRadius - 60) * Math.cos(angle);
+                  model.x + ((model.outerRadius * 2) / 3) * Math.cos(angle);
                 const posY =
-                  model.y + (model.outerRadius - 60) * Math.sin(angle);
+                  model.y + ((model.outerRadius * 2) / 3) * Math.sin(angle);
 
                 ctx.save();
                 ctx.textAlign = "center";
