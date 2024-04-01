@@ -18,6 +18,7 @@ export default function Modal({ onEmailSubmit, eventId }) {
   };
   const [email, setEmail] = useState("");
   const [isValid, setIsValid] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleInputChange = (e) => {
     const inputValue = e.target.value;
@@ -47,7 +48,11 @@ export default function Modal({ onEmailSubmit, eventId }) {
       .insert([{ email: email, event: eventId }])
       .select();
     onEmailSubmit(email);
-    hideModal();
+    if (error) {
+      setErrorMessage("Invalid Email");
+    } else {
+      hideModal();
+    }
   };
 
   return (
@@ -74,6 +79,7 @@ export default function Modal({ onEmailSubmit, eventId }) {
                 placeholder="email"
                 required
               />
+              <span>{errorMessage}</span>
             </div>{" "}
             <button
               className="confirm-button"

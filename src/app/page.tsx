@@ -42,12 +42,16 @@ export default function Home() {
     let labels = [];
     let sizes = [];
     let segmentColors = [];
+    let segmentBordersColor = [];
+    let segmentBordersWidth = [];
 
     for (let i = 0; i < fetchedData.length; i++) {
       labels.push(fetchedData[i].prizeName);
       sizes.push(fetchedData[i].size);
       if (fetchedData[i].isGrandPrize) {
         segmentColors.push("#F1045C");
+        segmentBordersColor.push("gold");
+        segmentBordersWidth.push(5);
       } else {
         let color = colors[i % colors.length];
         if (i === fetchedData.length - 1 && color === segmentColors[0]) {
@@ -56,6 +60,8 @@ export default function Home() {
           color = colors[randomIndex];
         }
         segmentColors.push(color);
+        segmentBordersColor.push("rgba(0, 0, 0, 0.1)");
+        segmentBordersWidth.push(1);
       }
     }
 
@@ -66,8 +72,8 @@ export default function Home() {
           label: "Weekly Sales",
           data: sizes,
           backgroundColor: segmentColors,
-          borderColor: "rgba(0, 0, 0, 0.1)", // Border color with some transparency
-          borderWidth: 1, // Set the border width
+          borderColor: segmentBordersColor, // Border color with some transparency
+          borderWidth: segmentBordersWidth, // Set the border width
           borderAlign: "inner",
           borderJoinStyle: "miter",
           rotation: 0,
@@ -167,13 +173,9 @@ export default function Home() {
   async function pickItemByProbability(data) {
     let emailCount = await countEmails();
     let rigNumber = await getRigData();
-    console.log(emailCount);
-    console.log(rigNumber);
-    if (emailCount % rigNumber === 0) {
+    if (rigNumber >= 0 && emailCount % rigNumber === 0) {
       for (let i = 0; i < data.length; i++) {
-        console.log("hello");
         if (data[i].isGrandPrize) {
-          console.log("RIG");
           return i;
         }
       }
@@ -211,9 +213,12 @@ export default function Home() {
     myChart.current.config.data.datasets[0].rotation =
       360 * 20 + 360 - rotation;
     myChart.current.update();
-    setTimeout(() => {
-      setShowPrizeScreen(true);
-    }, 10000); // 10000 milliseconds = 10 seconds
+
+    if (testdata.current[winnerIndex].isGrandPrize) {
+      setTimeout(() => {
+        setShowPrizeScreen(true);
+      }, 10000); // 10000 milliseconds = 10 seconds
+    }
   }
 
   const handleEmailChange = (newEmail) => {

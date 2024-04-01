@@ -8,7 +8,7 @@ import styles from "./page.module.css";
 import SinglePrizeEntry from "./SinglePrizeEntry";
 
 export default function AdminPage() {
-  const [prizeEntryList, setPrizeEntryList] = useState([{}]);
+  const [prizeEntryList, setPrizeEntryList] = useState([]);
 
   const [eventList, setEventList] = useState([{ id: "", eventName: "" }]);
   const [selectedEvent, setSelectedEvent] = useState("");
@@ -31,13 +31,23 @@ export default function AdminPage() {
   };
 
   const handleCreateEvent = async (event) => {
+    const defaultPrizeEntry = {
+      prizeName: "",
+      size: "",
+      probability: "",
+      isGrandPrize: false,
+    };
+
     const { data, error } = await supabase
       .from("Wheels")
-      .insert({ eventName: "New Event", data: [{}] })
+      .insert({ eventName: "New Event", data: [defaultPrizeEntry] })
       .select()
       .single();
+
     console.log(data);
     setSelectedEvent(data.id);
+    setPrizeEntryList([defaultPrizeEntry]); // Initialize with default entry
+    getEvents();
   };
 
   const handlePrizeEntryChange = (index, updatedPrizeEntry) => {
@@ -94,6 +104,11 @@ export default function AdminPage() {
     setSelectedEvent(eventId);
   };
 
+  async function getEvents() {
+    const { data, error } = await supabase.from("Wheels").select(`*`);
+    setEventList(data);
+  }
+
   useEffect(() => {
     async function getEventData() {
       const { data, error } = await supabase
@@ -104,6 +119,7 @@ export default function AdminPage() {
       console.log(data);
       setSelectedEventName(data.eventName);
       setPrizeEntryList(data.data);
+      setRigNumber(data.rigNumber);
     }
     if (selectedEvent) {
       getEventData();
@@ -111,10 +127,6 @@ export default function AdminPage() {
   }, [selectedEvent]);
 
   useEffect(() => {
-    async function getEvents() {
-      const { data, error } = await supabase.from("Wheels").select(`*`);
-      setEventList(data);
-    }
     getEvents();
   }, []);
 
@@ -154,16 +166,15 @@ export default function AdminPage() {
               <label>Prize Name</label>
               <label>Size</label>
               <label>% Chance</label>
-              {Object.keys(prizeEntryList[0]).length > 0 &&
-                prizeEntryList.map((prizeEntry, index) => (
-                  <SinglePrizeEntry
-                    key={index}
-                    index={index}
-                    prizeEntry={{ ...prizeEntry }}
-                    onChange={handlePrizeEntryChange}
-                    onRemove={handleRemovePrizeEntry}
-                  />
-                ))}
+              {prizeEntryList.map((prizeEntry, index) => (
+                <SinglePrizeEntry
+                  key={index}
+                  index={index}
+                  prizeEntry={{ ...prizeEntry }}
+                  onChange={handlePrizeEntryChange}
+                  onRemove={handleRemovePrizeEntry}
+                />
+              ))}
               <button onClick={handleAddPrizeEntry}>Add P</button>
               <button onClick={handleAddGrandPrizeEntry}>Add GP</button>
               <button onClick={handleSave}>Save</button>
