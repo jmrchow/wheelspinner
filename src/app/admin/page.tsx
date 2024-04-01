@@ -133,7 +133,12 @@ export default function AdminPage() {
   return (
     <main className={styles.main}>
       <div className={styles.sideBar}>
-        <button onClick={handleCreateEvent}>Create Event</button>
+        <button
+          className={styles.createEventButton}
+          onClick={handleCreateEvent}
+        >
+          Create Event
+        </button>
         {eventList.map((event, index) => (
           <button
             className={styles.eventButton}
@@ -148,11 +153,18 @@ export default function AdminPage() {
       {selectedEvent && (
         <div className={styles.dashboardContainer}>
           <h1>{selectedEventName}</h1>
-          <button onClick={handleActiveEventChange}>Make Active</button>
+          <button
+            className={styles.makeActiveButton}
+            onClick={handleActiveEventChange}
+          >
+            Make Active
+          </button>
           <div className={styles.wheelConfigContainer}>
             <div className={styles.leftSide}>
-              <div className={styles.wheelContainer}></div>
-              <p>Wheel preview here</p>
+              <div className={styles.wheelContainer}>
+                <p>Wheel preview here</p>
+              </div>
+
               <label>
                 Rig
                 <input

@@ -10,6 +10,7 @@ const SinglePrizeEntry = ({ index, prizeEntry, onChange, onRemove }) => {
   return (
     <div className={styles.singlePrizeData}>
       <input
+        className={styles.prizeName}
         type="text"
         name="prizeName"
         value={prizeEntry.prizeName}

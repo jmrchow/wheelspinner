@@ -5,23 +5,61 @@
 .dashboardContainer {
   display: flex;
   flex-direction: column;
+  padding: 50px;
 }
 .wheelConfigContainer {
   display: flex;
   flex-direction: row;
+  background-color: lightgray;
+  padding: 10px;
 }
 
 .leftSide {
   display: flex;
   flex-direction: column;
+  padding: 20px;
+}
+
+.wheelContainer {
+  height: 300px;
+  width: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .sideBar {
   display: flex;
   flex-direction: column;
+  height: 100vh;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: lightgray;
+}
+.createEventButton {
+  height: 50px;
+  width: 200px;
+  background-color: gray;
+  margin: 10px 0 10px 0;
+}
+.eventButton {
+  height: 50px;
+  width: 200px;
+  margin: 5px 0 0 0;
 }
 
-.eventButton {
-  height: 20px;
+.makeActiveButton {
+  height: 50px;
+  width: 100px;
+  margin: 20px 0 20px 0;
+}
+
+.singlePrizeData input {
+  height: 30px;
   width: 50px;
+  margin: 10px;
+}
+
+.singlePrizeData .prizeName {
+  width: 300px;
 }
