@@ -20,14 +20,16 @@ export default function Home() {
   const [wheelDataFetched, setWheelDataFetched] = useState(false);
   const [showPrizeScreen, setShowPrizeScreen] = useState(false);
   const [email, setEmail] = useState("");
+  const [eventId, setEventId] = useState("");
 
   useEffect(() => {
     async function getWheelData() {
       const { data, error } = await supabase
         .from("ActiveEvent")
-        .select(`name, name (data)`)
+        .select(`id (id, data)`)
         .single();
-      testdata.current = data.name.data;
+      testdata.current = data.id.data;
+      setEventId(data.id.id);
       setWheelDataFetched(true);
     }
     getWheelData();
@@ -36,21 +38,34 @@ export default function Home() {
     // Data and configuration
 
     let fetchedData = testdata.current;
-    let colors = [];
+    let colors = ["#F1AF04", "#64CBF3", "#82B11D"];
     let labels = [];
     let sizes = [];
+    let segmentColors = [];
+
     for (let i = 0; i < fetchedData.length; i++) {
       labels.push(fetchedData[i].prizeName);
       sizes.push(fetchedData[i].size);
-      colors.push(randomColor());
+      if (fetchedData[i].isGrandPrize) {
+        segmentColors.push("#F1045C");
+      } else {
+        let color = colors[i % colors.length];
+        if (i === fetchedData.length - 1 && color === segmentColors[0]) {
+          // Generate a random index that's not the first or last index
+          let randomIndex = Math.floor(Math.random() * (colors.length - 2)) + 1;
+          color = colors[randomIndex];
+        }
+        segmentColors.push(color);
+      }
     }
+
     const data = {
       labels: labels,
       datasets: [
         {
           label: "Weekly Sales",
           data: sizes,
-          backgroundColor: colors,
+          backgroundColor: segmentColors,
           borderColor: "rgba(0, 0, 0, 0.1)", // Border color with some transparency
           borderWidth: 1, // Set the border width
           borderAlign: "inner",
@@ -133,8 +148,36 @@ export default function Home() {
     // Return cleanup function
     return () => myChart.current.destroy(); // Destroy chart on unmount
   }, [wheelDataFetched]);
+  async function countEmails() {
+    const { data, error, count } = await supabase
+      .from("Emails")
+      .select("*", { count: "exact" })
+      .eq("event", eventId);
+    return count;
+  }
 
-  function pickItemByProbability(data) {
+  async function getRigData() {
+    const { data, error } = await supabase
+      .from("Wheels")
+      .select("rigNumber")
+      .eq("id", eventId)
+      .single();
+    return data.rigNumber;
+  }
+  async function pickItemByProbability(data) {
+    let emailCount = await countEmails();
+    let rigNumber = await getRigData();
+    console.log(emailCount);
+    console.log(rigNumber);
+    if (emailCount % rigNumber === 0) {
+      for (let i = 0; i < data.length; i++) {
+        console.log("hello");
+        if (data[i].isGrandPrize) {
+          console.log("RIG");
+          return i;
+        }
+      }
+    }
     // Calculate the total weight
     let totalWeight = data.reduce((acc, item) => acc + item.probability, 0);
 
@@ -155,13 +198,14 @@ export default function Home() {
     // return the index of the last item as a fallback
     return data.length - 1;
   }
-  function spin() {
-    let winnerIndex = pickItemByProbability(testdata.current);
+  async function spin() {
+    let winnerIndex = await pickItemByProbability(testdata.current);
     console.log(winnerIndex + 1);
     let totalSizes = testdata.current.reduce((acc, item) => acc + item.size, 0);
     let prevSizes = testdata.current
       .slice(0, winnerIndex)
       .reduce((acc, item) => acc + item.size, 0);
+    console.log(testdata.current);
     let rotation =
       ((prevSizes + testdata.current[winnerIndex].size / 2) / totalSizes) * 360;
     myChart.current.config.data.datasets[0].rotation =
@@ -180,7 +224,9 @@ export default function Home() {
       <Modal
         className={styles.modalOverlay}
         onEmailSubmit={handleEmailChange}
+        eventId={eventId}
       ></Modal>
+      <h1>SPIN TO WIN</h1>
       <div className={styles.wheelContainer}>
         <Image
           className={styles.wheelBorder}

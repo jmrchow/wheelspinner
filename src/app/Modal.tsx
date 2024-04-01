@@ -5,7 +5,7 @@ import "./Modal.css";
 
 import { supabase } from "./supabaseClient";
 
-export default function Modal({ onEmailSubmit }) {
+export default function Modal({ onEmailSubmit, eventId }) {
   const [showModal, setShowModal] = useState(true);
 
   const openModal = (event) => {
@@ -44,7 +44,7 @@ export default function Modal({ onEmailSubmit }) {
   const onConfirmHandle = async () => {
     const { data, error } = await supabase
       .from("Emails")
-      .insert([{ email: email }])
+      .insert([{ email: email, event: eventId }])
       .select();
     onEmailSubmit(email);
     hideModal();
@@ -54,7 +54,7 @@ export default function Modal({ onEmailSubmit }) {
     <>
       {showModal && (
         <div className="modal">
-          <div className="overlay" onClick={hideModal}></div>
+          <div className="overlay"></div>
           <div className="modal-content">
             <button className="close-button" onClick={hideModal}>
               X

@@ -1,7 +1,7 @@
 .main {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 1rem;
   min-height: 100vh;
@@ -34,9 +34,9 @@
 }
 .wheelPointer {
   position: absolute;
-  height: 25%;
-  width: 25%;
-  top: -5%;
+  height: 28%;
+  width: 28%;
+  top: -6%;
   left: 50%;
   transform: translate(-50%, 0);
   z-index: 1;

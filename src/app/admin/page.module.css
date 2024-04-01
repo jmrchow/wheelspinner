@@ -1,0 +1,27 @@
+.main {
+  display: flex;
+}
+
+.dashboardContainer {
+  display: flex;
+  flex-direction: column;
+}
+.wheelConfigContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.leftSide {
+  display: flex;
+  flex-direction: column;
+}
+
+.sideBar {
+  display: flex;
+  flex-direction: column;
+}
+
+.eventButton {
+  height: 20px;
+  width: 50px;
+}
