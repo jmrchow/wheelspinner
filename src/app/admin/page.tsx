@@ -2,6 +2,7 @@
 
 import Chart from "chart.js/auto";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "../supabaseClient";
 import styles from "./page.module.css";
@@ -18,6 +19,9 @@ export default function AdminPage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const [emailList, setEmailList] = useState([]);
+
+  const myChart = useRef(null);
+  const chartContainer = useRef(null);
 
   const handleRigNumberChange = (event) => {
     setRigNumber(event.target.value); // Update the state with the new value when input changes
@@ -48,7 +52,6 @@ export default function AdminPage() {
       .select()
       .single();
 
-    console.log(data);
     setSelectedEvent(data.id);
     setPrizeEntryList([defaultPrizeEntry]); // Initialize with default entry
     getEvents();
@@ -97,7 +100,6 @@ export default function AdminPage() {
   };
 
   const handleSave = async () => {
-    console.log(prizeEntryList);
     const { error } = await supabase
       .from("Wheels")
       .update({ rigNumber: rigNumber, data: prizeEntryList })
@@ -163,7 +165,6 @@ export default function AdminPage() {
       .from("Emails")
       .select("*")
       .eq("event", selectedEvent);
-    console.log(data);
     setEmailList(data);
   };
   useEffect(() => {
@@ -173,7 +174,6 @@ export default function AdminPage() {
         .select(`*`)
         .eq("id", selectedEvent)
         .single();
-      console.log(data);
       setSelectedEventName(data.eventName);
       setPrizeEntryList(data.data);
       setRigNumber(data.rigNumber);
@@ -188,6 +188,81 @@ export default function AdminPage() {
   useEffect(() => {
     getEvents();
   }, []);
+
+  useEffect(() => {
+    if (selectedEvent) {
+      let fetchedData = prizeEntryList;
+      let colors = ["#F1AF04", "#64CBF3", "#82B11D"];
+      let labels = [];
+      let sizes = [];
+      let segmentColors = [];
+      let segmentBordersColor = [];
+      let segmentBordersWidth = [];
+
+      for (let i = 0; i < fetchedData.length; i++) {
+        labels.push(fetchedData[i].prizeName);
+        sizes.push(fetchedData[i].size);
+        if (fetchedData[i].isGrandPrize) {
+          segmentColors.push("#F1045C");
+          segmentBordersColor.push("gold");
+          segmentBordersWidth.push(5);
+        } else {
+          let color = colors[i % colors.length];
+          if (i === fetchedData.length - 1 && color === segmentColors[0]) {
+            // Generate a random index that's not the first or last index
+            let randomIndex =
+              Math.floor(Math.random() * (colors.length - 2)) + 1;
+            color = colors[randomIndex];
+          }
+          segmentColors.push(color);
+          segmentBordersColor.push("rgba(0, 0, 0, 0.1)");
+          segmentBordersWidth.push(1);
+        }
+      }
+
+      Chart.register(ChartDataLabels);
+
+      const data = {
+        labels: labels,
+        datasets: [
+          {
+            label: "Weekly Sales",
+            data: sizes,
+            backgroundColor: segmentColors,
+            borderColor: segmentBordersColor, // Border color with some transparency
+            borderWidth: segmentBordersWidth, // Set the border width
+            borderAlign: "inner",
+            borderJoinStyle: "miter",
+            rotation: 0,
+          },
+        ],
+      };
+
+      const config = {
+        type: "pie",
+        data,
+        options: {
+          plugins: [ChartDataLabels],
+          events: [],
+          plugins: {
+            datalabels: {
+              display: true,
+              formatter: (value, context) =>
+                context.chart.data.labels[context.dataIndex],
+              color: "white",
+            },
+            legend: { display: false },
+          },
+        },
+      };
+
+      // Render chart
+      myChart.current = new Chart(chartContainer.current, config);
+
+      // Return cleanup function
+      return () => myChart.current.destroy();
+    }
+  }, [prizeEntryList]);
 
   return (
     <main className={styles.main}>
@@ -233,7 +308,34 @@ export default function AdminPage() {
           <div className={styles.wheelConfigContainer}>
             <div className={styles.leftSide}>
               <div className={styles.wheelContainer}>
-                <p>Wheel preview here</p>
+                <Image
+                  className={styles.wheelPointer}
+                  src="/wheel-pointer.svg"
+                  width={1}
+                  height={1}
+                  alt="Picture of the author"
+                />
+                <Image
+                  className={styles.wheelCenter}
+                  src="/wheel-center.svg"
+                  width={1}
+                  height={1}
+                  alt="Picture of the author"
+                />
+                <Image
+                  className={styles.wheelSmallCenter}
+                  src="/wheel-smallcenter.svg"
+                  width={1}
+                  height={1}
+                  alt="Picture of the author"
+                />
+                <div className={styles.chartBox}>
+                  <canvas
+                    className={styles.myChart}
+                    ref={chartContainer}
+                    id="myChart"
+                  ></canvas>
+                </div>
               </div>
 
               <label>
@@ -291,7 +393,6 @@ export default function AdminPage() {
 }
 
 const EditEventModal = ({ eventName, onSave, onCancel }) => {
-  console.log(eventName);
   const [editedEventName, setEditedEventName] = useState(eventName);
 
   const handleSave = () => {

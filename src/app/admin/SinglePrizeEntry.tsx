@@ -2,8 +2,6 @@ import React from "react";
 import styles from "./page.module.css";
 
 const SinglePrizeEntry = ({ index, prizeEntry, onChange, onRemove }) => {
-  console.log("HI");
-  console.log(prizeEntry);
   const handleInputChange = (index, event) => {
     const { name, value } = event.target;
     onChange(index, { ...prizeEntry, [name]: value });
