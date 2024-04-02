@@ -10,10 +10,12 @@
 
 .wheelContainer {
   position: relative;
-  width: 80%;
-  max-width: 1000px;
+  width: 65%;
+  height: 65%;
+  max-width: 1024px;
+  max-height: 768px;
   aspect-ratio: 1/1;
-  margin-top: 15%;
+  margin-top: 5%;
 }
 .chartBox {
   position: absolute;
