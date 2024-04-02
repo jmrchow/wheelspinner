@@ -54,7 +54,7 @@ export default function Home() {
       labels.push(fetchedData[i].prizeName);
       sizes.push(fetchedData[i].size);
       if (fetchedData[i].isGrandPrize) {
-        segmentColors.push("#F1045C");
+        segmentColors.push("#F14886");
         segmentBordersColor.push("gold");
         segmentBordersWidth.push(5);
       } else {
@@ -178,7 +178,7 @@ export default function Home() {
   async function pickItemByProbability(data) {
     let emailCount = await countEmails();
     let rigNumber = await getRigData();
-    if (rigNumber >= 0 && emailCount % rigNumber === 0) {
+    if (rigNumber > 0 && emailCount % rigNumber === 0) {
       for (let i = 0; i < data.length; i++) {
         if (data[i].isGrandPrize) {
           return i;

@@ -9,15 +9,28 @@
 }
 .wheelConfigContainer {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   background-color: lightgray;
   padding: 10px;
+}
+
+.wheelSettingsContainer {
+  display: flex;
+  flex-direction: row;
 }
 
 .leftSide {
   display: flex;
   flex-direction: column;
+  height: 100%;
   padding: 20px;
+}
+
+.rightSide {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
 }
 
 .wheelContainer {
@@ -26,6 +39,18 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.rigSetting {
+  align-self: center;
+  justify-self: center;
+  padding: 20px;
+}
+
+.saveButton {
+  width: 200px;
+  height: 50px;
+  align-self: center;
 }
 
 .sideBar {
@@ -47,13 +72,34 @@
   width: 200px;
   margin: 5px 0 0 0;
 }
-
-.makeActiveButton {
+.activeOrDeleteButtons {
+  display: flex;
+  gap: 20px;
+}
+.makeActiveButton,
+.deleteEventButton {
   height: 50px;
-  width: 100px;
+  width: 150px;
   margin: 20px 0 20px 0;
 }
-
+.deleteEventButton {
+  color: red;
+  border-color: red;
+  border-style: solid;
+}
+.prizeDataLabels {
+  display: flex;
+  flex-direction: row;
+}
+.prizeDataLabels :nth-child(n) {
+  margin: 0 10px;
+}
+.prizeDataLabels :nth-child(1) {
+  width: 50%;
+}
+.prizeDataLabels :nth-child(2) {
+  width: 10%;
+}
 .singlePrizeData input {
   height: 30px;
   width: 50px;
@@ -61,10 +107,63 @@
 }
 
 .singlePrizeData .prizeName {
-  width: 300px;
+  width: 50%;
+}
+
+.singlePrizeData .prizeSize,
+.singlePrizeData .prizeProbability {
+  width: 10%;
 }
 
 .grandPrize {
   border: solid;
   border-color: green;
+}
+
+.rightSideButtonRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10%;
+}
+
+.rightSideButtonRow button {
+  padding: 5px 15px;
+}
+
+.emailListSection {
+  position: relative;
+  margin: 10px 0;
+}
+
+.refreshEmailsButton {
+  position: absolute;
+  width: 200px;
+  height: 50px;
+  top: 0%;
+  right: 0%;
+}
+.emailTable {
+  width: 100%;
+}
+/* Set width for each column */
+.emailTable th:nth-child(1),
+.emailTable td:nth-child(1) {
+  width: 30%; /* Adjust the width as needed */
+}
+
+.emailTable th:nth-child(2),
+.emailTable td:nth-child(2) {
+  width: 40%; /* Adjust the width as needed */
+}
+
+.emailTable th:nth-child(3),
+.emailTable td:nth-child(3) {
+  width: 30%; /* Adjust the width as needed */
+}
+
+.emailTable th {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
 }

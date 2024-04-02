@@ -28,6 +28,7 @@ export default function AdminPage() {
   };
 
   const handleActiveEventChange = async (event) => {
+    handleSave();
     const { deleteError } = await supabase
       .from("ActiveEvent")
       .delete()
@@ -43,7 +44,7 @@ export default function AdminPage() {
       prizeName: "",
       size: "",
       probability: "",
-      isGrandPrize: false,
+      isGrandPrize: true,
     };
 
     const { data, error } = await supabase
@@ -203,7 +204,7 @@ export default function AdminPage() {
         labels.push(fetchedData[i].prizeName);
         sizes.push(fetchedData[i].size);
         if (fetchedData[i].isGrandPrize) {
-          segmentColors.push("#F1045C");
+          segmentColors.push("#F14886");
           segmentBordersColor.push("gold");
           segmentBordersWidth.push(5);
         } else {
@@ -296,78 +297,77 @@ export default function AdminPage() {
             </button>
             {isEditModalOpen && renderModal()}
           </h1>
-          <button
-            className={styles.makeActiveButton}
-            onClick={handleActiveEventChange}
-          >
-            Make Active
-          </button>
-          <button className={styles.deleteButton} onClick={handleDeleteEvent}>
-            Delete Event
-          </button>
+          <div className={styles.activeOrDeleteButtons}>
+            <button
+              className={styles.makeActiveButton}
+              onClick={handleActiveEventChange}
+            >
+              Make Active
+            </button>
+            <button
+              className={styles.deleteEventButton}
+              onClick={handleDeleteEvent}
+            >
+              Delete Event
+            </button>
+          </div>
           <div className={styles.wheelConfigContainer}>
-            <div className={styles.leftSide}>
-              <div className={styles.wheelContainer}>
-                <Image
-                  className={styles.wheelPointer}
-                  src="/wheel-pointer.svg"
-                  width={1}
-                  height={1}
-                  alt="Picture of the author"
-                />
-                <Image
-                  className={styles.wheelCenter}
-                  src="/wheel-center.svg"
-                  width={1}
-                  height={1}
-                  alt="Picture of the author"
-                />
-                <Image
-                  className={styles.wheelSmallCenter}
-                  src="/wheel-smallcenter.svg"
-                  width={1}
-                  height={1}
-                  alt="Picture of the author"
-                />
-                <div className={styles.chartBox}>
-                  <canvas
-                    className={styles.myChart}
-                    ref={chartContainer}
-                    id="myChart"
-                  ></canvas>
+            <div className={styles.wheelSettingsContainer}>
+              <div className={styles.leftSide}>
+                <div className={styles.wheelContainer}>
+                  <div className={styles.chartBox}>
+                    <canvas
+                      className={styles.myChart}
+                      ref={chartContainer}
+                      id="myChart"
+                    ></canvas>
+                  </div>
+                </div>
+
+                <label className={styles.rigSetting}>
+                  Rig
+                  <input
+                    type="text"
+                    value={rigNumber} // Bind input value to the state
+                    onChange={handleRigNumberChange} // Update state when input changes
+                  />
+                </label>
+              </div>
+              <div className={styles.rightSide}>
+                <div className={styles.prizeDataLabels}>
+                  <p>Prize Name</p>
+                  <p>Size</p>
+                  <p>% Chance</p>
+                </div>
+                {prizeEntryList.map((prizeEntry, index) => (
+                  <SinglePrizeEntry
+                    key={index}
+                    index={index}
+                    prizeEntry={{ ...prizeEntry }}
+                    onChange={handlePrizeEntryChange}
+                    onRemove={handleRemovePrizeEntry}
+                  />
+                ))}
+                <div className={styles.rightSideButtonRow}>
+                  <button onClick={handleAddPrizeEntry}>Add P</button>
+                  <button onClick={handleAddGrandPrizeEntry}>Add GP</button>
                 </div>
               </div>
-
-              <label>
-                Rig
-                <input
-                  type="text"
-                  value={rigNumber} // Bind input value to the state
-                  onChange={handleRigNumberChange} // Update state when input changes
-                />
-              </label>
             </div>
-            <div className={styles.rightSide}>
-              <label>Prize Name</label>
-              <label>Size</label>
-              <label>% Chance</label>
-              {prizeEntryList.map((prizeEntry, index) => (
-                <SinglePrizeEntry
-                  key={index}
-                  index={index}
-                  prizeEntry={{ ...prizeEntry }}
-                  onChange={handlePrizeEntryChange}
-                  onRemove={handleRemovePrizeEntry}
-                />
-              ))}
-              <button onClick={handleAddPrizeEntry}>Add P</button>
-              <button onClick={handleAddGrandPrizeEntry}>Add GP</button>
-              <button onClick={handleSave}>Save</button>
-            </div>
+            <button className={styles.saveButton} onClick={handleSave}>
+              Save
+            </button>
           </div>
-          <div>
+          <div className={styles.emailListSection}>
+            <button
+              className={styles.refreshEmailsButton}
+              onClick={getEmailData}
+            >
+              Refresh
+            </button>
             <h1>Emails</h1>
-            <table>
+            <p>{emailList.length} emails collected</p>
+            <table className={styles.emailTable}>
               <thead>
                 <tr>
                   <th>Date</th>
@@ -378,7 +378,7 @@ export default function AdminPage() {
               <tbody>
                 {emailList.map((email) => (
                   <tr key={email.email}>
-                    <td>{email.created_at}</td>
+                    <td>{new Date(email.created_at).toLocaleString()}</td>
                     <td>{email.email}</td>
                     <td>{email.prize}</td>
                   </tr>

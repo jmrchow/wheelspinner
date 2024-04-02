@@ -19,12 +19,14 @@ const SinglePrizeEntry = ({ index, prizeEntry, onChange, onRemove }) => {
         onChange={(e) => handleInputChange(index, e)}
       />
       <input
+        className={styles.prizeSize}
         type="number"
         name="size"
         value={prizeEntry.size}
         onChange={(e) => handleInputChange(index, e)}
       />
       <input
+        className={styles.prizeProbability}
         type="number"
         name="probability"
         value={prizeEntry.probability}
