@@ -19,7 +19,7 @@ export default function Home() {
     { prizeName: "Wheel of Fortune", size: 100, probability: 100 },
   ]);
   const [wheelDataFetched, setWheelDataFetched] = useState(false);
-  const [showPrizeScreen, setShowPrizeScreen] = useState(false);
+  const [showPrizeScreen, setShowPrizeScreen] = useState(-1);
   const [email, setEmail] = useState("");
   const [eventId, setEventId] = useState("");
 
@@ -220,11 +220,10 @@ export default function Home() {
     myChart.current.update();
 
     postPrizeData(email, testdata.current[winnerIndex].prizeName);
-    if (testdata.current[winnerIndex].isGrandPrize) {
-      setTimeout(() => {
-        setShowPrizeScreen(true);
-      }, 10000); // 10000 milliseconds = 10 seconds
-    }
+
+    setTimeout(() => {
+      setShowPrizeScreen(winnerIndex);
+    }, 10000); // 10000 milliseconds = 10 seconds
   }
 
   async function postPrizeData(winnerEmail, prizeName) {
@@ -282,14 +281,21 @@ export default function Home() {
           ></canvas>
         </div>
       </div>
-      {showPrizeScreen && (
+      {showPrizeScreen >= 0 && (
         <div className={styles.prizeScreen}>
           <p>{email}</p>
-          <h2> YOU WON THE GRAND PRIZE, A HERSCHEL BAG</h2>
-          <p>
-            Take a screenshot of this screen and show it to (Sohmer or whoever
-            else is in charge of prize redemption) to redeem your prize!
-          </p>
+          <h2>
+            {testdata.current[showPrizeScreen].isGrandPrize
+              ? "YOU WON THE GRAND PRIZE, A "
+              : "YOU WON A "}
+            {testdata.current[showPrizeScreen].prizeName}
+          </h2>
+          <button
+            className={styles.doneButton}
+            onClick={() => window.location.reload()}
+          >
+            Done
+          </button>
         </div>
       )}
     </main>
