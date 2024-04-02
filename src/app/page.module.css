@@ -8,10 +8,6 @@
   background-color: #f5f5f5;
 }
 
-.body {
-  overflow: hidden;
-}
-
 .wheelContainer {
   position: relative;
   width: 65%;
