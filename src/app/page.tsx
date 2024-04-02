@@ -286,9 +286,8 @@ export default function Home() {
           <p>{email}</p>
           <h2>
             {testdata.current[showPrizeScreen].isGrandPrize
-              ? "YOU WON THE GRAND PRIZE, A "
-              : "YOU WON A "}
-            {testdata.current[showPrizeScreen].prizeName}
+              ? "YOU WON THE GRAND PRIZE, A HERSCHEL BAG"
+              : "YOU WON A " + testdata.current[showPrizeScreen].prizeName}
           </h2>
           <button
             className={styles.doneButton}
