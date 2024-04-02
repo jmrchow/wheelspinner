@@ -64,7 +64,7 @@
 }
 
 .modalOverlay {
-  z-index: 2;
+  z-index: 3;
   position: absolute;
 }
 
@@ -98,4 +98,12 @@
   padding: 5% 5% 5% 5%;
   gap: 3%;
   text-align: center;
+}
+
+.swipeBox {
+  position: absolute;
+  width: 50%;
+  height: 100%;
+  margin-left: 50%;
+  z-index: 2;
 }

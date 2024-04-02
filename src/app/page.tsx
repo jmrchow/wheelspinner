@@ -9,6 +9,7 @@ import randomColor from "randomcolor";
 import React, { useEffect, useRef, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { supabase } from "./supabaseClient";
+import { useSwipeable } from "react-swipeable";
 
 export const revalidate = 0;
 export default function Home() {
@@ -21,6 +22,10 @@ export default function Home() {
   const [showPrizeScreen, setShowPrizeScreen] = useState(false);
   const [email, setEmail] = useState("");
   const [eventId, setEventId] = useState("");
+
+  const handlers = useSwipeable({
+    onSwipedDown: (eventData) => spin(),
+  });
 
   useEffect(() => {
     async function getWheelData() {
@@ -214,11 +219,19 @@ export default function Home() {
       360 * 20 + 360 - rotation;
     myChart.current.update();
 
+    postPrizeData(email, testdata.current[winnerIndex].prizeName);
     if (testdata.current[winnerIndex].isGrandPrize) {
       setTimeout(() => {
         setShowPrizeScreen(true);
       }, 10000); // 10000 milliseconds = 10 seconds
     }
+  }
+
+  async function postPrizeData(winnerEmail, prizeName) {
+    const { error } = await supabase
+      .from("Emails")
+      .update({ prize: prizeName })
+      .eq("email", winnerEmail);
   }
 
   const handleEmailChange = (newEmail) => {
@@ -233,6 +246,7 @@ export default function Home() {
       ></Modal>
       <h1>SPIN TO WIN</h1>
       <div className={styles.wheelContainer}>
+        <div className={styles.swipeBox} {...handlers}></div>
         <Image
           className={styles.wheelBorder}
           src="/wheel-border.svg"
@@ -268,10 +282,6 @@ export default function Home() {
           ></canvas>
         </div>
       </div>
-
-      <button className={styles.spinButton} onClick={spin}>
-        Spin
-      </button>
       {showPrizeScreen && (
         <div className={styles.prizeScreen}>
           <p>{email}</p>

@@ -18,7 +18,7 @@ body.active-modal {
   right: 0;
   bottom: 0;
   position: fixed;
-  z-index: 2;
+  z-index: 3;
 }
 .modal h2 {
   font-size: 20px;
@@ -45,7 +45,7 @@ body.active-modal {
   border-radius: 30px;
   max-width: 600px;
   min-width: 300px;
-  z-index: 2;
+  z-index: 3;
 }
 
 .close-button {

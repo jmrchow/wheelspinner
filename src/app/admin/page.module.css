@@ -63,3 +63,8 @@
 .singlePrizeData .prizeName {
   width: 300px;
 }
+
+.grandPrize {
+  border: solid;
+  border-color: green;
+}

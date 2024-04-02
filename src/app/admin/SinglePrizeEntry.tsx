@@ -2,13 +2,17 @@ import React from "react";
 import styles from "./page.module.css";
 
 const SinglePrizeEntry = ({ index, prizeEntry, onChange, onRemove }) => {
+  console.log("HI");
+  console.log(prizeEntry);
   const handleInputChange = (index, event) => {
     const { name, value } = event.target;
     onChange(index, { ...prizeEntry, [name]: value });
   };
 
   return (
-    <div className={styles.singlePrizeData}>
+    <div
+      className={`${styles.singlePrizeData} ${prizeEntry.isGrandPrize ? styles.grandPrize : styles.notGrandPrize}`}
+    >
       <input
         className={styles.prizeName}
         type="text"
