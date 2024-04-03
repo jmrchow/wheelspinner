@@ -237,66 +237,71 @@ export default function Home() {
     setEmail(newEmail);
   };
   return (
-    <main className={styles.main}>
-      <Modal
-        className={styles.modalOverlay}
-        onEmailSubmit={handleEmailChange}
-        eventId={eventId}
-      ></Modal>
-      <h1>SPIN TO WIN</h1>
-      <div className={styles.wheelContainer}>
-        <div className={styles.swipeBox} {...handlers}></div>
-        <Image
-          className={styles.wheelBorder}
-          src="/wheel-border.svg"
-          fill={true}
-          alt="Picture of the author"
-        />
-        <Image
-          className={styles.wheelPointer}
-          src="/wheel-pointer.svg"
-          width={150}
-          height={150}
-          alt="Picture of the author"
-        />
-        <Image
-          className={styles.wheelCenter}
-          src="/wheel-center.svg"
-          width={500}
-          height={500}
-          alt="Picture of the author"
-        />
-        <Image
-          className={styles.wheelSmallCenter}
-          src="/wheel-smallcenter.svg"
-          width={500}
-          height={500}
-          alt="Picture of the author"
-        />
-        <div className={styles.chartBox}>
-          <canvas
-            className={styles.myChart}
-            ref={chartContainer}
-            id="myChart"
-          ></canvas>
+    <>
+      <style>
+        {"body, html{ overflow: hidden; overscroll-behavior:none; }"}
+      </style>
+      <main className={styles.main}>
+        <Modal
+          className={styles.modalOverlay}
+          onEmailSubmit={handleEmailChange}
+          eventId={eventId}
+        ></Modal>
+        <h1>SPIN TO WIN</h1>
+        <div className={styles.wheelContainer}>
+          <div className={styles.swipeBox} {...handlers}></div>
+          <Image
+            className={styles.wheelBorder}
+            src="/wheel-border.svg"
+            fill={true}
+            alt="Picture of the author"
+          />
+          <Image
+            className={styles.wheelPointer}
+            src="/wheel-pointer.svg"
+            width={150}
+            height={150}
+            alt="Picture of the author"
+          />
+          <Image
+            className={styles.wheelCenter}
+            src="/wheel-center.svg"
+            width={500}
+            height={500}
+            alt="Picture of the author"
+          />
+          <Image
+            className={styles.wheelSmallCenter}
+            src="/wheel-smallcenter.svg"
+            width={500}
+            height={500}
+            alt="Picture of the author"
+          />
+          <div className={styles.chartBox}>
+            <canvas
+              className={styles.myChart}
+              ref={chartContainer}
+              id="myChart"
+            ></canvas>
+          </div>
         </div>
-      </div>
-      {showPrizeScreen >= 0 && (
-        <div className={styles.prizeScreen}>
-          <p>{email}</p>
-          <h2>
-            {testdata.current[showPrizeScreen].isGrandPrize
-              ? "YOU WON THE GRAND PRIZE, A HERSCHEL BAG"
-              : "YOU WON A " + testdata.current[showPrizeScreen].prizeName}
-          </h2>
-          <button
-            className={styles.doneButton}
-            onClick={() => window.location.reload()}
-          >
-            Done
-          </button>
-        </div>
-      )}
-    </main>
+        {showPrizeScreen >= 0 && (
+          <div className={styles.prizeScreen}>
+            <p>{email}</p>
+            <h2>
+              {testdata.current[showPrizeScreen].isGrandPrize
+                ? "YOU WON THE GRAND PRIZE, A HERSCHEL BAG"
+                : "YOU WON A " + testdata.current[showPrizeScreen].prizeName}
+            </h2>
+            <button
+              className={styles.doneButton}
+              onClick={() => window.location.reload()}
+            >
+              Done
+            </button>
+          </div>
+        )}
+      </main>
+    </>
   );
 }
