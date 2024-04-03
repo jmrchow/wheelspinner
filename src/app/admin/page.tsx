@@ -166,7 +166,10 @@ export default function AdminPage() {
       .from("Emails")
       .select("*")
       .eq("event", selectedEvent);
-    setEmailList(data);
+    const sortedEmailList = data.sort(
+      (a, b) => new Date(b.created_at) - new Date(a.created_at),
+    );
+    setEmailList(sortedEmailList);
   };
   useEffect(() => {
     async function getEventData() {
