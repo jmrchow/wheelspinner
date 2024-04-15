@@ -7,6 +7,14 @@ import { useEffect, useRef, useState } from "react";
 import { supabase } from "../supabaseClient";
 import styles from "./page.module.css";
 import SinglePrizeEntry from "./SinglePrizeEntry";
+import {
+  sortByDate,
+  sortByEmail,
+  sortByPrize,
+  filterEmailList,
+  sortByDateReversed,
+  sortByPrizeReversed,
+} from "./sortFunctions.tsx";
 
 export default function AdminPage() {
   const [prizeEntryList, setPrizeEntryList] = useState([]);
@@ -19,6 +27,11 @@ export default function AdminPage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const [emailList, setEmailList] = useState([]);
+  const [filteredEmailList, setFilteredEmailList] = useState([]);
+  const [sortedEmailList, setSortedEmailList] = useState([]);
+
+  const [sortFunction, setSortFunction] = useState();
+  const [searchString, setSearchString] = useState("");
 
   const myChart = useRef(null);
   const chartContainer = useRef(null);
@@ -166,11 +179,26 @@ export default function AdminPage() {
       .from("Emails")
       .select("*")
       .eq("event", selectedEvent);
-    const sortedEmailList = data.sort(
-      (a, b) => new Date(b.created_at) - new Date(a.created_at),
-    );
+    const sortedEmailList = data.toSorted(sortByDate);
     setEmailList(sortedEmailList);
   };
+
+  const handleOnSortByDate = () => {
+    if (sortFunction === sortByDate) {
+      setSortFunction(() => sortByDateReversed);
+    } else {
+      setSortFunction(() => sortByDate);
+    }
+  };
+
+  const handleOnSortByPrize = () => {
+    if (sortFunction === sortByPrize) {
+      setSortFunction(() => sortByPrizeReversed);
+    } else {
+      setSortFunction(() => sortByPrize);
+    }
+  };
+
   useEffect(() => {
     async function getEventData() {
       const { data, error } = await supabase
@@ -267,6 +295,17 @@ export default function AdminPage() {
       return () => myChart.current.destroy();
     }
   }, [prizeEntryList]);
+
+  useEffect(() => {
+    setFilteredEmailList(filterEmailList(emailList, searchString));
+  }, [emailList, searchString]);
+  useEffect(() => {
+    if (!sortFunction) {
+      setSortedEmailList(filteredEmailList);
+    } else {
+      setSortedEmailList(filteredEmailList.toSorted(sortFunction));
+    }
+  }, [filteredEmailList, sortFunction]);
 
   return (
     <main className={styles.main}>
@@ -370,16 +409,26 @@ export default function AdminPage() {
             </button>
             <h1>Emails</h1>
             <p>{emailList.length} emails collected</p>
+            <input
+              type="text"
+              value={searchString}
+              onChange={(e) => setSearchString(e.target.value)}
+              placeholder="Search by email"
+            />
             <table className={styles.emailTable}>
               <thead>
                 <tr>
-                  <th>Date</th>
+                  <th>
+                    Date<button onClick={handleOnSortByDate}>sort</button>
+                  </th>
                   <th>Email</th>
-                  <th>Prize</th>
+                  <th>
+                    Prize <button onClick={handleOnSortByPrize}>sort</button>
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                {emailList.map((email) => (
+                {sortedEmailList.map((email) => (
                   <tr key={email.email}>
                     <td>{new Date(email.created_at).toLocaleString()}</td>
                     <td>{email.email}</td>
