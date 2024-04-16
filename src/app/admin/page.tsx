@@ -15,6 +15,7 @@ import {
   sortByDateReversed,
   sortByPrizeReversed,
 } from "./sortFunctions.tsx";
+import { mkConfig, generateCsv, download } from "export-to-csv";
 
 export default function AdminPage() {
   const [prizeEntryList, setPrizeEntryList] = useState([]);
@@ -199,6 +200,25 @@ export default function AdminPage() {
     }
   };
 
+  const handleExportEmails = () => {
+    const csvConfig = mkConfig({
+      useKeysAsHeaders: true,
+      filename: "emaillist",
+    });
+    const csvData = JSON.parse(JSON.stringify(sortedEmailList));
+    for (let i = 0; i < csvData.length; i++) {
+      console.log(csvData[i]);
+      csvData[i].event = selectedEventName;
+      csvData[i].created_at = new Date(csvData[i].created_at).toLocaleString();
+      if (csvData[i].prize === null) {
+        csvData[i].prize = "";
+      }
+    }
+
+    const csv = generateCsv(csvConfig)(csvData);
+    download(csvConfig)(csv);
+  };
+
   useEffect(() => {
     async function getEventData() {
       const { data, error } = await supabase
@@ -305,6 +325,7 @@ export default function AdminPage() {
     } else {
       setSortedEmailList(filteredEmailList.toSorted(sortFunction));
     }
+    console.log(sortedEmailList);
   }, [filteredEmailList, sortFunction]);
 
   return (
@@ -407,7 +428,8 @@ export default function AdminPage() {
             >
               Refresh
             </button>
-            <h1>Emails</h1>
+            <h1>Email list</h1>
+            <button onClick={handleExportEmails}>Export</button>
             <p>{emailList.length} emails collected</p>
             <input
               type="text"
