@@ -96,7 +96,7 @@ export default function Home() {
 
         ctx.save();
         ctx.beginPath();
-        ctx.fillStyle = "black";
+        ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
         ctx.moveTo(xCenter, top + 30);
         ctx.lineTo(xCenter - 15, top);
         ctx.lineTo(xCenter + 15, top);
@@ -247,7 +247,16 @@ export default function Home() {
           onEmailSubmit={handleEmailChange}
           eventId={eventId}
         ></Modal>
-        <h1>SPIN TO WIN</h1>
+        <div className={styles.headerContainer}>
+          <Image
+            className={styles.rewardedPlay}
+            src="/rewarded-play.svg"
+            width={150}
+            height={150}
+            alt="Picture of the author"
+          />
+          <h1>SPIN TO WIN</h1>
+        </div>
         <div className={styles.wheelContainer}>
           <div className={styles.swipeBox} {...handlers}></div>
           <Image
@@ -256,13 +265,7 @@ export default function Home() {
             fill={true}
             alt="Picture of the author"
           />
-          <Image
-            className={styles.wheelPointer}
-            src="/wheel-pointer.svg"
-            width={150}
-            height={150}
-            alt="Picture of the author"
-          />
+
           <Image
             className={styles.wheelCenter}
             src="/wheel-center.svg"
@@ -287,17 +290,33 @@ export default function Home() {
         </div>
         {showPrizeScreen >= 0 && (
           <div className={styles.prizeScreen}>
-            <p>{email}</p>
+            <Image
+              className={styles.rewardedPlayDone}
+              src="/rewarded-play.svg"
+              width={150}
+              height={150}
+              alt="Picture of the author"
+            />
+            <h2> CONGRATULATIONS!</h2>
             <h2>
               {testdata.current[showPrizeScreen].isGrandPrize
-                ? "YOU WON THE GRAND PRIZE, A HERSCHEL BAG"
-                : "YOU WON A " + testdata.current[showPrizeScreen].prizeName}
+                ? "YOU WON THE GRAND PRIZE, "
+                : "YOU WON A "}
+              <span className={styles.prize}>
+                {testdata.current[showPrizeScreen].isGrandPrize ? (
+                  <>
+                    <br />A HERSCHEL BAG
+                  </>
+                ) : (
+                  testdata.current[showPrizeScreen].prizeName
+                )}
+              </span>
             </h2>
             <button
               className={styles.doneButton}
               onClick={() => window.location.reload()}
             >
-              Done
+              Ok!
             </button>
           </div>
         )}

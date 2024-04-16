@@ -8,14 +8,33 @@
   background-color: #f5f5f5;
 }
 
+.headerContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 15vh;
+}
+
+.rewardedPlay {
+  height: 75%;
+}
+
+.rewardedPlay h1 {
+  height: 25%;
+  width: 100%;
+}
+
 .wheelContainer {
   position: relative;
-  width: 65%;
-  height: 65%;
-  max-width: 1024px;
+  height: 100%;
+  width: auto;
+
+  flex: 1;
+  max-height: 1024px;
   aspect-ratio: 1/1;
-  margin-top: 5%;
+  margin-top: 3%;
 }
+
 .chartBox {
   position: absolute;
   width: 90%;
@@ -25,21 +44,19 @@
   transform: translate(-50%, -50%);
   z-index: 0;
 }
+
+.myChart {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 .wheelBorder {
   width: 100%;
   height: 100%;
   top: 50%;
   left: 50%;
-  transform: rotate(2deg) translate(0, 1%);
-  z-index: 1;
-}
-.wheelPointer {
-  position: absolute;
-  height: 28%;
-  width: 28%;
-  top: -6%;
-  left: 50%;
-  transform: translate(-50%, 0);
+  transform: rotate(0deg) translate(0, 0%);
   z-index: 1;
 }
 
@@ -49,7 +66,7 @@
   height: 15%;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -35%);
+  transform: translate(-50%, -50%);
   z-index: 1;
 }
 
@@ -60,8 +77,17 @@
   width: 7%;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -18%);
+  transform: translate(-50%, -50%);
   z-index: 1;
+}
+
+@media (orientation: portrait) {
+  .wheelContainer {
+    width: 80%;
+    margin-top: 3%;
+    flex: 0;
+    justify-content: space-between;
+  }
 }
 
 .modalOverlay {
@@ -72,6 +98,7 @@
 .doneButton {
   height: 50px;
   width: 80%;
+  max-width: 290px;
   background: #f1045c;
   border-color: white;
   color: white;
@@ -101,6 +128,14 @@
   text-align: center;
 }
 
+.prize {
+  color: #f1045c;
+}
+
+.rewardedPlayDone {
+  height: 15%;
+  width: auto;
+}
 .swipeBox {
   position: absolute;
   width: 50%;

@@ -61,6 +61,7 @@ export default function Modal({ onEmailSubmit, eventId }) {
         <div className="modal">
           <div className="overlay"></div>
           <div className="modal-content">
+            <button onClick={hideModal}>bbbb</button>
             <h2>Give us your email to spin!</h2>
             <div>
               <input
