@@ -2,6 +2,7 @@
 
 import Chart from "chart.js/auto";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import LoginPage from "./LoginPage";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "../supabaseClient";
@@ -33,6 +34,8 @@ export default function AdminPage() {
 
   const [sortFunction, setSortFunction] = useState();
   const [searchString, setSearchString] = useState("");
+
+  const [user, setUser] = useState(null);
 
   const myChart = useRef(null);
   const chartContainer = useRef(null);
@@ -329,153 +332,161 @@ export default function AdminPage() {
   }, [filteredEmailList, sortFunction]);
 
   return (
-    <main className={styles.main}>
-      <div className={styles.sideBar}>
-        <button
-          className={styles.createEventButton}
-          onClick={handleCreateEvent}
-        >
-          Create Event
-        </button>
-        {eventList.map((event, index) => (
-          <button
-            className={styles.eventButton}
-            key={event.id}
-            onClick={() => handleSelectEvent(event.id)}
-          >
-            {event.eventName}
-          </button>
-        ))}
-      </div>
-
-      {selectedEvent && (
-        <div className={styles.dashboardContainer}>
-          <h1 className={styles.eventName}>
-            {selectedEventName}
+    <div>
+      {" "}
+      {user ? (
+        <main className={styles.main}>
+          <div className={styles.sideBar}>
             <button
-              className={styles.editEventNameButton}
-              onClick={openEditModal}
+              className={styles.createEventButton}
+              onClick={handleCreateEvent}
             >
-              Edit event name
+              Create Event
             </button>
-            {isEditModalOpen && renderModal()}
-          </h1>
-          <div className={styles.activeOrDeleteButtons}>
-            <button
-              className={styles.makeActiveButton}
-              onClick={handleActiveEventChange}
-            >
-              Make Active
-            </button>
-            <button
-              className={styles.deleteEventButton}
-              onClick={handleDeleteEvent}
-            >
-              Delete Event
-            </button>
+            {eventList.map((event, index) => (
+              <button
+                className={styles.eventButton}
+                key={event.id}
+                onClick={() => handleSelectEvent(event.id)}
+              >
+                {event.eventName}
+              </button>
+            ))}
           </div>
-          <div className={styles.wheelConfigContainer}>
-            <div className={styles.wheelSettingsContainer}>
-              <div className={styles.leftSide}>
-                <h2>Wheel Preview</h2>
-                <div className={styles.wheelContainer}>
-                  <div className={styles.chartBox}>
-                    <canvas
-                      className={styles.myChart}
-                      ref={chartContainer}
-                      id="myChart"
-                    ></canvas>
+
+          {selectedEvent && (
+            <div className={styles.dashboardContainer}>
+              <h1 className={styles.eventName}>
+                {selectedEventName}
+                <button
+                  className={styles.editEventNameButton}
+                  onClick={openEditModal}
+                >
+                  Edit event name
+                </button>
+                {isEditModalOpen && renderModal()}
+              </h1>
+              <div className={styles.activeOrDeleteButtons}>
+                <button
+                  className={styles.makeActiveButton}
+                  onClick={handleActiveEventChange}
+                >
+                  Make Active
+                </button>
+                <button
+                  className={styles.deleteEventButton}
+                  onClick={handleDeleteEvent}
+                >
+                  Delete Event
+                </button>
+              </div>
+              <div className={styles.wheelConfigContainer}>
+                <div className={styles.wheelSettingsContainer}>
+                  <div className={styles.leftSide}>
+                    <h2>Wheel Preview</h2>
+                    <div className={styles.wheelContainer}>
+                      <div className={styles.chartBox}>
+                        <canvas
+                          className={styles.myChart}
+                          ref={chartContainer}
+                          id="myChart"
+                        ></canvas>
+                      </div>
+                    </div>
+
+                    <h2 className={styles.rigSetting}>
+                      Rig
+                      <input
+                        type="text"
+                        value={rigNumber} // Bind input value to the state
+                        onChange={handleRigNumberChange} // Update state when input changes
+                      />
+                    </h2>
+                  </div>
+                  <div className={styles.rightSide}>
+                    <div className={styles.prizeDataLabels}>
+                      <p>Prize Name</p>
+                      <p>Size</p>
+                      <p>% Chance</p>
+                      <span></span>
+                    </div>
+                    {prizeEntryList.map((prizeEntry, index) => (
+                      <SinglePrizeEntry
+                        key={index}
+                        index={index}
+                        prizeEntry={{ ...prizeEntry }}
+                        onChange={handlePrizeEntryChange}
+                        onRemove={handleRemovePrizeEntry}
+                      />
+                    ))}
+                    <div className={styles.rightSideButtonRow}>
+                      {" "}
+                      <button onClick={handleAddGrandPrizeEntry}>
+                        Add Grand Prize
+                      </button>
+                      <button onClick={handleAddPrizeEntry}>Add Prize</button>
+                    </div>
                   </div>
                 </div>
-
-                <h2 className={styles.rigSetting}>
-                  Rig
-                  <input
-                    type="text"
-                    value={rigNumber} // Bind input value to the state
-                    onChange={handleRigNumberChange} // Update state when input changes
-                  />
-                </h2>
+                <button className={styles.saveButton} onClick={handleSave}>
+                  Save
+                </button>
               </div>
-              <div className={styles.rightSide}>
-                <div className={styles.prizeDataLabels}>
-                  <p>Prize Name</p>
-                  <p>Size</p>
-                  <p>% Chance</p>
-                  <span></span>
+              <div className={styles.emailListSection}>
+                <button
+                  className={styles.refreshEmailsButton}
+                  onClick={getEmailData}
+                >
+                  Refresh
+                </button>{" "}
+                <div className={styles.emailListTitle}>
+                  <h1>Email list</h1>{" "}
+                  <button
+                    className={styles.exportButton}
+                    onClick={handleExportEmails}
+                  >
+                    Export
+                  </button>{" "}
                 </div>
-                {prizeEntryList.map((prizeEntry, index) => (
-                  <SinglePrizeEntry
-                    key={index}
-                    index={index}
-                    prizeEntry={{ ...prizeEntry }}
-                    onChange={handlePrizeEntryChange}
-                    onRemove={handleRemovePrizeEntry}
-                  />
-                ))}
-                <div className={styles.rightSideButtonRow}>
-                  {" "}
-                  <button onClick={handleAddGrandPrizeEntry}>
-                    Add Grand Prize
-                  </button>
-                  <button onClick={handleAddPrizeEntry}>Add Prize</button>
-                </div>
+                <p>{emailList.length} emails collected</p>
+                <input
+                  className={styles.emailSearchInput}
+                  type="text"
+                  value={searchString}
+                  onChange={(e) => setSearchString(e.target.value)}
+                  placeholder="Search email"
+                />
+                <table className={styles.emailTable}>
+                  <thead>
+                    <tr>
+                      <th>
+                        Date<button onClick={handleOnSortByDate}>sort</button>
+                      </th>
+                      <th>Email</th>
+                      <th>
+                        Prize{" "}
+                        <button onClick={handleOnSortByPrize}>sort</button>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sortedEmailList.map((email) => (
+                      <tr key={email.email}>
+                        <td>{new Date(email.created_at).toLocaleString()}</td>
+                        <td>{email.email}</td>
+                        <td>{email.prize}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
-            <button className={styles.saveButton} onClick={handleSave}>
-              Save
-            </button>
-          </div>
-          <div className={styles.emailListSection}>
-            <button
-              className={styles.refreshEmailsButton}
-              onClick={getEmailData}
-            >
-              Refresh
-            </button>{" "}
-            <div className={styles.emailListTitle}>
-              <h1>Email list</h1>{" "}
-              <button
-                className={styles.exportButton}
-                onClick={handleExportEmails}
-              >
-                Export
-              </button>{" "}
-            </div>
-            <p>{emailList.length} emails collected</p>
-            <input
-              className={styles.emailSearchInput}
-              type="text"
-              value={searchString}
-              onChange={(e) => setSearchString(e.target.value)}
-              placeholder="Search email"
-            />
-            <table className={styles.emailTable}>
-              <thead>
-                <tr>
-                  <th>
-                    Date<button onClick={handleOnSortByDate}>sort</button>
-                  </th>
-                  <th>Email</th>
-                  <th>
-                    Prize <button onClick={handleOnSortByPrize}>sort</button>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {sortedEmailList.map((email) => (
-                  <tr key={email.email}>
-                    <td>{new Date(email.created_at).toLocaleString()}</td>
-                    <td>{email.email}</td>
-                    <td>{email.prize}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+          )}
+        </main>
+      ) : (
+        <LoginPage setUser={setUser} />
       )}
-    </main>
+    </div>
   );
 }
 

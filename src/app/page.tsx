@@ -251,8 +251,8 @@ export default function Home() {
           <Image
             className={styles.rewardedPlay}
             src="/rewarded-play.svg"
-            width={150}
-            height={150}
+            width={300}
+            height={300}
             alt="Picture of the author"
           />
           <h1>SPIN TO WIN</h1>
