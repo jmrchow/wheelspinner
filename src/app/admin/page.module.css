@@ -2,40 +2,53 @@
   display: flex;
 }
 
+.body {
+  font-family: var(--font-inter);
+}
+
 .dashboardContainer {
   display: flex;
   flex-direction: column;
   padding: 50px;
+  width: 100%;
 }
 .wheelConfigContainer {
   display: flex;
   flex-direction: column;
   background-color: lightgray;
-  padding: 10px;
+  padding: 30px;
+  min-width: 900px;
 }
 
 .wheelSettingsContainer {
   display: flex;
   flex-direction: row;
+  margin-bottom: 20px;
 }
 
 .leftSide {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
   height: 100%;
   padding: 20px;
+  margin: 30px;
+  width: 30%;
 }
 
 .rightSide {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 30px;
   height: 100%;
+  width: 70%;
 }
 
 .wheelContainer {
   height: 300px;
   width: 300px;
+  margin: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -44,33 +57,57 @@
 .rigSetting {
   align-self: center;
   justify-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 20px;
+}
+
+.rigSetting input {
+  width: 200px;
+  height: 60px;
+  border-radius: 10px;
+  border: 0px;
+  margin: 10px;
+  text-align: center;
 }
 
 .saveButton {
   width: 200px;
-  height: 50px;
+  height: 60px;
+  border-radius: 10px;
   align-self: center;
+  border: 1px solid black;
 }
 
 .sideBar {
   display: flex;
   flex-direction: column;
+  align-items: center;
   height: 100vh;
-  padding-left: 10px;
-  padding-right: 10px;
-  background-color: lightgray;
+  border: 1px solid black;
 }
 .createEventButton {
-  height: 50px;
+  height: 60px;
   width: 200px;
-  background-color: gray;
-  margin: 10px 0 10px 0;
+  border-radius: 10px;
+  background-color: lightgray;
+  border: 0px;
+  margin: 50px 0 30px 0;
 }
 .eventButton {
-  height: 50px;
-  width: 200px;
+  min-height: 70px;
+  width: 260px;
   margin: 5px 0 0 0;
+  border-radius: 0px;
+  border: 0px;
+  background-color: lightgray;
+  text-align: left;
+  font-weight: bold;
+  padding: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .activeOrDeleteButtons {
   display: flex;
@@ -78,18 +115,17 @@
 }
 .makeActiveButton,
 .deleteEventButton {
-  height: 50px;
-  width: 150px;
+  height: 60px;
+  width: 200px;
+  border-radius: 10px;
+  border: 0px;
   margin: 20px 0 20px 0;
-}
-.deleteEventButton {
-  color: red;
-  border-color: red;
-  border-style: solid;
 }
 .prizeDataLabels {
   display: flex;
   flex-direction: row;
+  justify-content: space-evenly;
+  font-weight: bold;
 }
 .prizeDataLabels :nth-child(n) {
   margin: 0 10px;
@@ -98,26 +134,43 @@
   width: 50%;
 }
 .prizeDataLabels :nth-child(2) {
-  width: 10%;
+  width: 92px;
 }
+.prizeDataLabels :nth-child(3) {
+  width: 130px;
+}
+.singlePrizeData {
+  display: flex;
+  justify-content: space-evenly;
+}
+
 .singlePrizeData input {
-  height: 30px;
-  width: 50px;
-  margin: 10px;
+  height: 54px;
+  width: 92px;
+  border-radius: 10px;
+  border: 1px solid black;
 }
 
 .singlePrizeData .prizeName {
   width: 50%;
+  padding-left: 15px;
 }
 
 .singlePrizeData .prizeSize,
 .singlePrizeData .prizeProbability {
-  width: 10%;
+  text-align: center;
 }
 
-.grandPrize {
-  border: solid;
-  border-color: green;
+.grandPrize input {
+  border: 2px solid #f1045c;
+}
+
+.removeButton {
+  height: 40px;
+  width: 40px;
+  border-radius: 20px;
+  align-self: center;
+  justify-self: center;
 }
 
 .rightSideButtonRow {
@@ -128,23 +181,78 @@
 }
 
 .rightSideButtonRow button {
+  height: 60px;
+  width: 200px;
   padding: 5px 15px;
+  border-radius: 10px;
+  border: 1px solid black;
+}
+.eventName {
+  display: flex;
+  font-size: 50px;
+  align-items: center;
+  justify-content: left;
+  gap: 20px;
+}
+.editEventNameButton {
+  width: 170px;
+  height: 46px;
+  border: 0px;
+  border-radius: 10px;
 }
 
 .emailListSection {
   position: relative;
-  margin: 10px 0;
+  margin: 40px 0;
+}
+
+.emailListTitle {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.exportButton {
+  width: 170px;
+  height: 46px;
+  border: 0px;
+  border-radius: 10px;
 }
 
 .refreshEmailsButton {
   position: absolute;
-  width: 200px;
-  height: 50px;
+  width: 180px;
+  height: 46px;
   top: 0%;
   right: 0%;
+  border-radius: 10px;
+  border: 0px;
+  background-color: lightgray;
+}
+
+.emailSearchInput {
+  border-radius: 10px;
+  border: 1px solid black;
+  padding-left: 20px;
+  width: 100%;
+  height: 50px;
+  margin: 15px 0px;
 }
 .emailTable {
   width: 100%;
+}
+
+.emailTable button {
+  margin: 0px 10px;
+  width: 20px;
+  height: 20px;
+  color: transparent;
+  background-color: transparent;
+  border: none;
+  background-image: url("../../../public/sort-icon.svg");
+  background-repeat: no-repeat !important;
+  background-size: cover;
 }
 /* Set width for each column */
 .emailTable th:nth-child(1),
@@ -163,7 +271,22 @@
 }
 
 .emailTable th {
-  padding: 8px;
+  padding: 10px 0px;
   text-align: left;
-  border-bottom: 1px solid #ddd;
+}
+
+.emailTable td {
+  padding: 6px 0px;
+}
+
+/* Chrome, Safari, Edge, Opera */
+.singlePrizeData input::-webkit-outer-spin-button,
+.singlePrizeData input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: -1;
+}
+
+/* Firefox */
+.singlePrizeData input[type="number"] {
+  -moz-appearance: textfield;
 }

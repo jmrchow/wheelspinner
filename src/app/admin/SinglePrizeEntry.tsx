@@ -32,7 +32,9 @@ const SinglePrizeEntry = ({ index, prizeEntry, onChange, onRemove }) => {
         value={prizeEntry.probability}
         onChange={(e) => handleInputChange(index, e)}
       />
-      <button onClick={() => onRemove(index)}>Remove</button>
+      <button className={styles.removeButton} onClick={() => onRemove(index)}>
+        X
+      </button>
     </div>
   );
 };

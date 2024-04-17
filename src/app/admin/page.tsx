@@ -350,13 +350,13 @@ export default function AdminPage() {
 
       {selectedEvent && (
         <div className={styles.dashboardContainer}>
-          <h1>
+          <h1 className={styles.eventName}>
             {selectedEventName}
             <button
               className={styles.editEventNameButton}
               onClick={openEditModal}
             >
-              Edit
+              Edit event name
             </button>
             {isEditModalOpen && renderModal()}
           </h1>
@@ -377,6 +377,7 @@ export default function AdminPage() {
           <div className={styles.wheelConfigContainer}>
             <div className={styles.wheelSettingsContainer}>
               <div className={styles.leftSide}>
+                <h2>Wheel Preview</h2>
                 <div className={styles.wheelContainer}>
                   <div className={styles.chartBox}>
                     <canvas
@@ -387,20 +388,21 @@ export default function AdminPage() {
                   </div>
                 </div>
 
-                <label className={styles.rigSetting}>
+                <h2 className={styles.rigSetting}>
                   Rig
                   <input
                     type="text"
                     value={rigNumber} // Bind input value to the state
                     onChange={handleRigNumberChange} // Update state when input changes
                   />
-                </label>
+                </h2>
               </div>
               <div className={styles.rightSide}>
                 <div className={styles.prizeDataLabels}>
                   <p>Prize Name</p>
                   <p>Size</p>
                   <p>% Chance</p>
+                  <span></span>
                 </div>
                 {prizeEntryList.map((prizeEntry, index) => (
                   <SinglePrizeEntry
@@ -412,8 +414,11 @@ export default function AdminPage() {
                   />
                 ))}
                 <div className={styles.rightSideButtonRow}>
-                  <button onClick={handleAddPrizeEntry}>Add P</button>
-                  <button onClick={handleAddGrandPrizeEntry}>Add GP</button>
+                  {" "}
+                  <button onClick={handleAddGrandPrizeEntry}>
+                    Add Grand Prize
+                  </button>
+                  <button onClick={handleAddPrizeEntry}>Add Prize</button>
                 </div>
               </div>
             </div>
@@ -427,15 +432,23 @@ export default function AdminPage() {
               onClick={getEmailData}
             >
               Refresh
-            </button>
-            <h1>Email list</h1>
-            <button onClick={handleExportEmails}>Export</button>
+            </button>{" "}
+            <div className={styles.emailListTitle}>
+              <h1>Email list</h1>{" "}
+              <button
+                className={styles.exportButton}
+                onClick={handleExportEmails}
+              >
+                Export
+              </button>{" "}
+            </div>
             <p>{emailList.length} emails collected</p>
             <input
+              className={styles.emailSearchInput}
               type="text"
               value={searchString}
               onChange={(e) => setSearchString(e.target.value)}
-              placeholder="Search by email"
+              placeholder="Search email"
             />
             <table className={styles.emailTable}>
               <thead>
