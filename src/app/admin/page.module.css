@@ -106,6 +106,10 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.selectedEventButton {
+  background-color: gray;
+}
 .activeOrDeleteButtons {
   display: flex;
   gap: 20px;

@@ -58,9 +58,9 @@ export default function AdminPage() {
 
   const handleCreateEvent = async (event) => {
     const defaultPrizeEntry = {
-      prizeName: "",
-      size: "",
-      probability: "",
+      prizeName: "Prize",
+      size: "100",
+      probability: "100",
       isGrandPrize: true,
     };
 
@@ -345,7 +345,7 @@ export default function AdminPage() {
             </button>
             {eventList.map((event, index) => (
               <button
-                className={styles.eventButton}
+                className={`${styles.eventButton} ${event.id === selectedEvent ? styles.selectedEventButton : ""}`}
                 key={event.id}
                 onClick={() => handleSelectEvent(event.id)}
               >
